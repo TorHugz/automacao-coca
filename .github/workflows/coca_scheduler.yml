@@ -1,0 +1,24 @@
+name: Automação da Coca de Terça
+
+on:
+  schedule:
+    # Roda toda terça-feira (Day 2) às 13:00 UTC (10:00 da manhã no Horário de Brasília)
+    - cron: '0 13 * * 2'
+  workflow_dispatch: # Permite rodar manualmente clicando em um botão no GitHub para testar
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fazer o Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Executar o Script
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python execution/slack_webhook.py
